@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ./app
+    volumes:
+      - ./app:/var/www/html
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+    environment:
+      MYSQL_DATABASE: 'user'
+    networks:
+      - app-db-network
+
+  db:
+    build: 
+      context: ./db
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ''
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "yes"
+      MYSQL_DATABASE: 'user'
+    ports:
+      - '3307:3306'
+    networks:
+      - app-db-network
+
+volumes:
+  db: {}
+
+networks:
+  app-db-network:
